@@ -16,7 +16,7 @@ export default function Sidebar() {
 
   return (
     <div className="sidebar">
-      <h2>TypeMood</h2>
+      <h2>Florune</h2>
 
       <div style={{ marginTop: 16 }}>
         <strong>Buscar músicas</strong>

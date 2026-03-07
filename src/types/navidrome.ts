@@ -3,9 +3,8 @@ const USER = "talona"
 const PASS = "123"
 
 export async function getRandomSongs() {
-
   const res = await fetch(
-    `${NAVIDROME}/rest/getRandomSongs?u=${USER}&p=${PASS}&v=1.16.1&c=typemood&f=json&size=10`
+    `${NAVIDROME}/rest/getRandomSongs?u=${USER}&p=${PASS}&v=1.16.1&c=florune&f=json&size=10`,
   )
 
   const data = await res.json()
@@ -14,5 +13,5 @@ export async function getRandomSongs() {
 }
 
 export function streamUrl(id: string) {
-  return `${NAVIDROME}/rest/stream?id=${id}&u=${USER}&p=${PASS}&v=1.16.1&c=typemood`
+  return `${NAVIDROME}/rest/stream?id=${id}&u=${USER}&p=${PASS}&v=1.16.1&c=florune`
 }

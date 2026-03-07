@@ -127,7 +127,7 @@ export default function PlayerView() {
   return (
     <div className="app">
       <header className="player-header">
-        <h1>TypeMood</h1>
+        <h1>Florune</h1>
         <p className="subtitle">Navidrome player minimal</p>
       </header>
 
