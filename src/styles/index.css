@@ -1,0 +1,19 @@
+.layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  height: 100vh;
+}
+
+.sidebar {
+  background: #111;
+  padding: 20px;
+}
+
+.content {
+  padding: 30px;
+  padding-bottom: 130px; /* leave space for the bottom player bar */
+}
+
+audio {
+  display: none;
+}
