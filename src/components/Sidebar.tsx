@@ -1,4 +1,5 @@
 import { usePlayer } from "../features/player/usePlayer"
+import Button from "./ui/Button"
 
 export default function Sidebar() {
   const {
@@ -15,41 +16,25 @@ export default function Sidebar() {
   const current = currentIndex !== null ? playlist[currentIndex] : null
 
   return (
-    <div className="sidebar">
+    <aside className="sidebar scrollable">
       <h2>Florune</h2>
 
-      <div style={{ marginTop: 16 }}>
-        <strong>Buscar músicas</strong>
+      <section className="section">
+        <h3>Buscar músicas</h3>
         <input
+          className="input"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Digite um título ou artista"
-          style={{
-            width: "100%",
-            marginTop: 8,
-            padding: 8,
-            borderRadius: 8,
-            border: "1px solid rgba(255,255,255,0.18)",
-            background: "rgba(255,255,255,0.06)",
-            color: "#fff",
-          }}
         />
-      </div>
+      </section>
 
-      <div style={{ marginTop: 18 }}>
-        <strong>Gênero</strong>
+      <section className="section">
+        <h3>Gênero</h3>
         <select
+          className="input"
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
-          style={{
-            width: "100%",
-            marginTop: 8,
-            padding: 8,
-            borderRadius: 8,
-            border: "1px solid rgba(255,255,255,0.18)",
-            background: "rgba(255,255,255,0.06)",
-            color: "#fff",
-          }}
         >
           <option value="">Todos</option>
           <option value="rock">Rock</option>
@@ -57,30 +42,21 @@ export default function Sidebar() {
           <option value="electronic">Eletrônica</option>
           <option value="jazz">Jazz</option>
         </select>
-      </div>
+      </section>
 
-      <div style={{ marginTop: 20 }}>
-        <strong>Configurações</strong>
-        <div style={{ marginTop: 8, fontSize: 14, color: "#d1d5db" }}>
-          (Em breve)
-        </div>
-      </div>
+      <section className="section">
+        <h3>Configurações</h3>
+        <div className="muted">(Em breve)</div>
+      </section>
 
-      <div
-        style={{
-          marginTop: 20,
-          display: "flex",
-          flexDirection: "column",
-          gap: 10,
-        }}
-      >
-        <button onClick={resume} disabled={isPlaying || !current}>
+      <div className="section button-group">
+        <Button onClick={resume} disabled={isPlaying || !current}>
           ▶ Play
-        </button>
-        <button onClick={pause} disabled={!isPlaying}>
+        </Button>
+        <Button onClick={pause} disabled={!isPlaying} variant="ghost">
           ⏸ Pause
-        </button>
+        </Button>
       </div>
-    </div>
+    </aside>
   )
 }

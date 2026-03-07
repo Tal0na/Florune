@@ -168,7 +168,8 @@ audio {
   right: 0;
   height: 92px;
   padding: 12px 20px;
-  padding-left: 220px; /* reserve space for sidebar */
+  padding-left: 220px; /* reserve space for left sidebar */
+  padding-right: 300px; /* reserve space for right sidebar */
   background: rgba(28, 27, 31, 0.95);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;

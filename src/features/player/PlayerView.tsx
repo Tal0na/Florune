@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { getRandomSongs, streamUrl } from "../../types/navidrome"
 import { usePlayer } from "./usePlayer"
+import Card from "../../components/ui/Card"
 import "../../styles/PlayerView.css"
 
 type NavidromeSong = {
@@ -133,7 +134,7 @@ export default function PlayerView() {
 
       {error && <div className="error">{error}</div>}
 
-      <section className="playlist">
+      <Card className="playlist">
         <h2>Lista de reprodução</h2>
         {loading ? (
           <p>Carregando músicas…</p>
@@ -154,7 +155,7 @@ export default function PlayerView() {
             ))}
           </ul>
         )}
-      </section>
+      </Card>
 
       <div className="player-bar">
         <div className="bar-left">
