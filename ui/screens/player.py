@@ -5,7 +5,7 @@ from textual.widgets import Header, Footer, ListView, ListItem, Label, LoadingIn
 from textual.containers import Vertical, Center
 from textual import work
 
-# Importamos o modelo e o cliente
+# Importamos o modelo e a SUA classe de API
 from core.models import MusicServer
 from core.api.jellyfin_client import FloruneJellyClient
 
@@ -38,17 +38,18 @@ class PlayerScreen(Screen):
     def __init__(self, server_data: dict):
         super().__init__()
         self.server_info = server_data
-        self.client = FloruneJellyClient()
+        
+        # CORREÇÃO: Usando o nome correto da sua classe de API
+        self.client = FloruneJellyClient() 
         self.songs_list = []
         
-        # Inicializa o player MPV (apenas um init agora!)
-        # No CachyOS, certifique-se de ter o pacote 'mpv' instalado
+        # Inicializa o MPV com logs para o terminal (ajuda no debug do CachyOS)
         try:
-            self.player = mpv.MPV(ytdl=False, video=False)
-        except OSError:
-            # Caso a libmpv não seja encontrada
+            self.player = mpv.MPV(ytdl=False, video=False, log_handler=print)
+            self.player.volume = 100
+        except Exception as e:
             self.player = None
-            print("Erro: libmpv não encontrada. Instale 'mpv' ou 'mpv-libs'.")
+            print(f"Erro ao carregar libmpv: {e}")
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -71,6 +72,7 @@ class PlayerScreen(Screen):
     async def iniciar_conexao(self) -> None:
         status_bar = self.query_one("#status-bar", Static)
         try:
+            # Chama o método de autenticação que criamos no FloruneJellyClient
             auth_success = self.client.authenticate(
                 self.server_info['url'], 
                 self.server_info['user'], 
@@ -79,11 +81,12 @@ class PlayerScreen(Screen):
 
             if auth_success:
                 status_bar.update(f"Status: [green]● Conectado como {self.server_info['user']}[/]")
+                # Busca as 100 primeiras músicas reais (sem ser as pastas)
                 self.songs_list = self.client.get_tracks(limit=100)
                 self.app.call_later(self.exibir_lista)
             else:
                 status_bar.update("Status: [red]○ Falha na Autenticação[/]")
-                self.notify("Verifique suas credenciais!", severity="error")
+                self.notify("Credenciais inválidas!", severity="error")
         except Exception as e:
             status_bar.update("Status: [red]○ Erro de Conexão[/]")
             self.notify(f"Erro: {e}", severity="error")
@@ -103,23 +106,21 @@ class PlayerScreen(Screen):
             )
             song_list.mount(item)
         
-        self.notify(f"Sucesso! {len(self.songs_list)} músicas carregadas.")
+        self.notify(f"{len(self.songs_list)} músicas prontas!")
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
-        """Dispara ao apertar ENTER na lista."""
+        """Toca a música ao apertar Enter."""
         index = event.list_view.index
         
         if self.player and index is not None and index < len(self.songs_list):
             selected_song = self.songs_list[index]
             try:
+                # O MPV agora recebe a URL completa com o token
                 self.player.play(selected_song.stream_url)
-                self.notify(f"Tocando: {selected_song.title}", title="Florune")
+                self.notify(f"Tocando: {selected_song.title}")
             except Exception as e:
-                self.notify(f"Erro de áudio: {e}", severity="error")
-        elif not self.player:
-            self.notify("Player MPV não inicializado!", severity="error")
+                self.notify(f"Erro ao tocar: {e}", severity="error")
 
     def on_unmount(self) -> None:
-        """Garante que o áudio pare ao sair da tela."""
         if self.player:
             self.player.terminate()
